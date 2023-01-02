@@ -1,0 +1,8 @@
+Elżbieta Jowik, Mateusz Wójcik
+https://github.com/marneusz/SNARS-projects
+{"D1-K=2.csv", 0.647}
+{"D1-UNC.csv", 0.0036}
+{"D2-K=7.csv", 0.00158}
+{"D2-UNC.csv", 0.118}
+{"D3-K=12.csv", 2.99}
+{"D3-UNC.csv", 0.00302}
