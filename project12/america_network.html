@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "font": {"color": "white"}, "id": "states", "label": "states", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "america", "label": "america", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "trump states", "label": "trump states", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "turbot", "label": "turbot", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "bedford new hampshire", "label": "bedford new hampshire", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nh", "label": "nh", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "asheville nc", "label": "asheville nc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "baltimore", "label": "baltimore", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "goldsboro", "label": "goldsboro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nc", "label": "nc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "colo", "label": "colo", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "greeley", "label": "greeley", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "penn", "label": "penn", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "seaside park", "label": "seaside park", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nj", "label": "nj", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "maryland", "label": "maryland", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "scott walker wisconsin", "label": "scott walker wisconsin", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "whos", "label": "whos", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "milwaukee", "label": "milwaukee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "west allis wi", "label": "west allis wi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hershey pa", "label": "hershey pa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "orlando", "label": "orlando", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fl", "label": "fl", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mobile", "label": "mobile", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "santa", "label": "santa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "of america", "label": "of america", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ulster", "label": "ulster", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new york", "label": "new york", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hart", "label": "hart", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "detroit", "label": "detroit", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tempe", "label": "tempe", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "phx", "label": "phx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "az", "label": "az", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fayetteville", "label": "fayetteville", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ark", "label": "ark", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "manheim", "label": "manheim", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pa", "label": "pa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "newark", "label": "newark", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chicago", "label": "chicago", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "camden", "label": "camden", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new virginia", "label": "new virginia", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "da nang", "label": "da nang", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "red", "label": "red", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "saigon", "label": "saigon", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "gop", "label": "gop", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "islam new", "label": "islam new", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mckinney", "label": "mckinney", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "oxford", "label": "oxford", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "california new hampshire nevada", "label": "california new hampshire nevada", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new mexico", "label": "new mexico", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "waterville valley", "label": "waterville valley", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sandown", "label": "sandown", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mi", "label": "mi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hayward", "label": "hayward", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "la", "label": "la", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tx", "label": "tx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nm", "label": "nm", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tn", "label": "tn", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ky", "label": "ky", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hamtramck", "label": "hamtramck", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wi", "label": "wi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mn", "label": "mn", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nv", "label": "nv", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chester", "label": "chester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "charleston", "label": "charleston", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tonopah", "label": "tonopah", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "il", "label": "il", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "moron", "label": "moron", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "jersey city", "label": "jersey city", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ny", "label": "ny", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new jersey", "label": "new jersey", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "newwark", "label": "newwark", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nyc", "label": "nyc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "charlottesville", "label": "charlottesville", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "elizabeth", "label": "elizabeth", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nevada iowa", "label": "nevada iowa", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "quinnipiac", "label": "quinnipiac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tightens", "label": "tightens", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "raleigh nc", "label": "raleigh nc", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "las vegas", "label": "las vegas", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "nashua", "label": "nashua", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "san diego", "label": "san diego", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ponce", "label": "ponce", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "moon township", "label": "moon township", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "missouri", "label": "missouri", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mississippi", "label": "mississippi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "indiana", "label": "indiana", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "newsone", "label": "newsone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sscac", "label": "sscac", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "lakeview", "label": "lakeview", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tamir", "label": "tamir", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "islamic iran", "label": "islamic iran", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "free palestine", "label": "free palestine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "rico", "label": "rico", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "york city", "label": "york city", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "boston", "label": "boston", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chicago park district", "label": "chicago park district", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "southport", "label": "southport", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "north lawndale", "label": "north lawndale", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "willsboro", "label": "willsboro", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mexican", "label": "mexican", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "troy", "label": "troy", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "austin", "label": "austin", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "realdonaldtrump", "label": "realdonaldtrump", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "loons", "label": "loons", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "asheville", "label": "asheville", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "trump campaigns", "label": "trump campaigns", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "selma", "label": "selma", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "high point", "label": "high point", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "studio", "label": "studio", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "old york", "label": "old york", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "normandy blvd jacksonville", "label": "normandy blvd jacksonville", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "colorado virginia", "label": "colorado virginia", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "communist hong kong", "label": "communist hong kong", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "cedemont", "label": "cedemont", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "independence", "label": "independence", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "miner", "label": "miner", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fort wayne", "label": "fort wayne", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "english", "label": "english", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "counties", "label": "counties", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "newton", "label": "newton", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "holland mi", "label": "holland mi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wascatholic", "label": "wascatholic", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "stony brook", "label": "stony brook", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "jax", "label": "jax", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hollywood", "label": "hollywood", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pme", "label": "pme", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "flint la", "label": "flint la", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new london", "label": "new london", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "conway", "label": "conway", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "mecca", "label": "mecca", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hudson", "label": "hudson", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "washington county", "label": "washington county", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "excl", "label": "excl", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "long", "label": "long", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "laconia", "label": "laconia", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "disinvested", "label": "disinvested", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "annapolis", "label": "annapolis", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "the united states", "label": "the united states", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "montgomery", "label": "montgomery", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "laguardia", "label": "laguardia", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ulster county", "label": "ulster county", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "west coast", "label": "west coast", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "austin tx", "label": "austin tx", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "arkansas", "label": "arkansas", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hot springs", "label": "hot springs", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "sad", "label": "sad", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fort myers", "label": "fort myers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hattiesburg", "label": "hattiesburg", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "alleghney county", "label": "alleghney county", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new england", "label": "new england", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "hope", "label": "hope", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "holland", "label": "holland", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "presidents", "label": "presidents", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "chris kyles iraqi", "label": "chris kyles iraqi", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "wake", "label": "wake", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ryans", "label": "ryans", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "kluudkimvn greeley", "label": "kluudkimvn greeley", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "vegas", "label": "vegas", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "jyimiibqkb albuquerque", "label": "jyimiibqkb albuquerque", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "tallahassee", "label": "tallahassee", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "fla", "label": "fla", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "new orleans", "label": "new orleans", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "stan kroenke bashes st", "label": "stan kroenke bashes st", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "ft myers", "label": "ft myers", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "west palm beach", "label": "west palm beach", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "cape canaveral", "label": "cape canaveral", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "coral gables", "label": "coral gables", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "pikeville", "label": "pikeville", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "portsmouth", "label": "portsmouth", "shape": "dot", "size": 10}, {"color": "#97c2fc", "font": {"color": "white"}, "id": "jfk", "label": "jfk", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": "states", "to": "america", "width": 1}, {"from": "states", "to": "trump states", "width": 1}, {"from": "states", "to": "turbot", "width": 1}, {"from": "bedford new hampshire", "to": "nh", "width": 1}, {"from": "asheville nc", "to": "baltimore", "width": 1}, {"from": "goldsboro", "to": "nc", "width": 1}, {"from": "colo", "to": "greeley", "width": 1}, {"from": "colo", "to": "penn", "width": 1}, {"from": "seaside park", "to": "nj", "width": 1}, {"from": "maryland", "to": "scott walker wisconsin", "width": 1}, {"from": "maryland", "to": "maryland", "width": 1}, {"from": "maryland", "to": "america", "width": 1}, {"from": "maryland", "to": "baltimore", "width": 1}, {"from": "whos", "to": "milwaukee", "width": 1}, {"from": "west allis wi", "to": "hershey pa", "width": 1}, {"from": "west allis wi", "to": "orlando", "width": 1}, {"from": "west allis wi", "to": "fl", "width": 1}, {"from": "west allis wi", "to": "mobile", "width": 1}, {"from": "santa", "to": "of america", "width": 1}, {"from": "santa", "to": "america", "width": 1}, {"from": "ulster", "to": "new york", "width": 1}, {"from": "hart", "to": "detroit", "width": 1}, {"from": "tempe", "to": "phx", "width": 1}, {"from": "tempe", "to": "az", "width": 1}, {"from": "fayetteville", "to": "nc", "width": 1}, {"from": "fayetteville", "to": "ark", "width": 1}, {"from": "manheim", "to": "pa", "width": 1}, {"from": "newark", "to": "detroit", "width": 1}, {"from": "newark", "to": "chicago", "width": 1}, {"from": "newark", "to": "baltimore", "width": 1}, {"from": "newark", "to": "milwaukee", "width": 1}, {"from": "newark", "to": "camden", "width": 1}, {"from": "new virginia", "to": "america", "width": 1}, {"from": "da nang", "to": "red", "width": 1}, {"from": "da nang", "to": "saigon", "width": 1}, {"from": "da nang", "to": "america", "width": 1}, {"from": "gop", "to": "pa", "width": 1}, {"from": "islam new", "to": "mckinney", "width": 1}, {"from": "oxford", "to": "fl", "width": 1}, {"from": "california new hampshire nevada", "to": "new mexico", "width": 1}, {"from": "waterville valley", "to": "sandown", "width": 1}, {"from": "mi", "to": "hayward", "width": 1}, {"from": "mi", "to": "la", "width": 1}, {"from": "mi", "to": "detroit", "width": 1}, {"from": "mi", "to": "pa", "width": 1}, {"from": "mi", "to": "tx", "width": 1}, {"from": "mi", "to": "nm", "width": 1}, {"from": "mi", "to": "tn", "width": 1}, {"from": "mi", "to": "ky", "width": 1}, {"from": "mi", "to": "hamtramck", "width": 1}, {"from": "mi", "to": "wi", "width": 1}, {"from": "mi", "to": "mn", "width": 1}, {"from": "mi", "to": "america", "width": 1}, {"from": "mi", "to": "fl", "width": 1}, {"from": "mi", "to": "nc", "width": 1}, {"from": "mi", "to": "az", "width": 1}, {"from": "mi", "to": "nv", "width": 1}, {"from": "mi", "to": "nh", "width": 1}, {"from": "chester", "to": "pa", "width": 1}, {"from": "charleston", "to": "baltimore", "width": 1}, {"from": "az", "to": "pa", "width": 1}, {"from": "az", "to": "nc", "width": 1}, {"from": "az", "to": "tonopah", "width": 1}, {"from": "az", "to": "fl", "width": 1}, {"from": "az", "to": "nv", "width": 1}, {"from": "az", "to": "nh", "width": 1}, {"from": "az", "to": "wi", "width": 1}, {"from": "az", "to": "tn", "width": 1}, {"from": "az", "to": "il", "width": 1}, {"from": "milwaukee", "to": "america", "width": 1}, {"from": "milwaukee", "to": "moron", "width": 1}, {"from": "milwaukee", "to": "detroit", "width": 1}, {"from": "milwaukee", "to": "chicago", "width": 1}, {"from": "milwaukee", "to": "baltimore", "width": 1}, {"from": "milwaukee", "to": "camden", "width": 1}, {"from": "nj", "to": "jersey city", "width": 1}, {"from": "nj", "to": "ny", "width": 1}, {"from": "nj", "to": "new jersey", "width": 1}, {"from": "nj", "to": "newwark", "width": 1}, {"from": "nj", "to": "nyc", "width": 1}, {"from": "nj", "to": "charlottesville", "width": 1}, {"from": "nj", "to": "mn", "width": 1}, {"from": "nj", "to": "america", "width": 1}, {"from": "nj", "to": "elizabeth", "width": 1}, {"from": "nj", "to": "new york", "width": 1}, {"from": "nevada iowa", "to": "ny", "width": 1}, {"from": "quinnipiac", "to": "pa", "width": 1}, {"from": "quinnipiac", "to": "tightens", "width": 1}, {"from": "raleigh nc", "to": "nc", "width": 1}, {"from": "nv", "to": "las vegas", "width": 1}, {"from": "nv", "to": "fl", "width": 1}, {"from": "nv", "to": "nc", "width": 1}, {"from": "nv", "to": "mn", "width": 1}, {"from": "nv", "to": "nh", "width": 1}, {"from": "nashua", "to": "nh", "width": 1}, {"from": "san diego", "to": "america", "width": 1}, {"from": "charlottesville", "to": "nyc", "width": 1}, {"from": "ponce", "to": "baltimore", "width": 1}, {"from": "moon township", "to": "pa", "width": 1}, {"from": "missouri", "to": "america", "width": 1}, {"from": "missouri", "to": "new mexico", "width": 1}, {"from": "missouri", "to": "mississippi", "width": 1}, {"from": "missouri", "to": "indiana", "width": 1}, {"from": "missouri", "to": "newsone", "width": 1}, {"from": "chicago", "to": "sscac", "width": 1}, {"from": "chicago", "to": "chicago", "width": 1}, {"from": "chicago", "to": "lakeview", "width": 1}, {"from": "chicago", "to": "tamir", "width": 1}, {"from": "chicago", "to": "baltimore", "width": 1}, {"from": "chicago", "to": "detroit", "width": 1}, {"from": "chicago", "to": "america", "width": 1}, {"from": "chicago", "to": "islamic iran", "width": 1}, {"from": "chicago", "to": "free palestine", "width": 1}, {"from": "chicago", "to": "rico", "width": 1}, {"from": "chicago", "to": "york city", "width": 1}, {"from": "chicago", "to": "boston", "width": 1}, {"from": "chicago", "to": "mississippi", "width": 1}, {"from": "chicago", "to": "chicago park district", "width": 1}, {"from": "chicago", "to": "southport", "width": 1}, {"from": "chicago", "to": "camden", "width": 1}, {"from": "chicago", "to": "north lawndale", "width": 1}, {"from": "willsboro", "to": "new york", "width": 1}, {"from": "mexican", "to": "america", "width": 1}, {"from": "of america", "to": "america", "width": 1}, {"from": "troy", "to": "america", "width": 1}, {"from": "austin", "to": "new york", "width": 1}, {"from": "realdonaldtrump", "to": "indiana", "width": 1}, {"from": "loons", "to": "america", "width": 1}, {"from": "nc", "to": "asheville", "width": 1}, {"from": "nc", "to": "pa", "width": 1}, {"from": "nc", "to": "nh", "width": 1}, {"from": "nc", "to": "fl", "width": 1}, {"from": "nc", "to": "trump campaigns", "width": 1}, {"from": "nc", "to": "selma", "width": 1}, {"from": "nc", "to": "high point", "width": 1}, {"from": "nc", "to": "nc", "width": 1}, {"from": "nc", "to": "wi", "width": 1}, {"from": "studio", "to": "la", "width": 1}, {"from": "old york", "to": "new york", "width": 1}, {"from": "normandy blvd jacksonville", "to": "fl", "width": 1}, {"from": "colorado virginia", "to": "indiana", "width": 1}, {"from": "communist hong kong", "to": "america", "width": 1}, {"from": "cedemont", "to": "baltimore", "width": 1}, {"from": "independence", "to": "america", "width": 1}, {"from": "indiana", "to": "america", "width": 1}, {"from": "indiana", "to": "indiana", "width": 1}, {"from": "indiana", "to": "miner", "width": 1}, {"from": "indiana", "to": "fort wayne", "width": 1}, {"from": "indiana", "to": "nh", "width": 1}, {"from": "english", "to": "america", "width": 1}, {"from": "pa", "to": "tx", "width": 1}, {"from": "pa", "to": "nm", "width": 1}, {"from": "pa", "to": "la", "width": 1}, {"from": "pa", "to": "tn", "width": 1}, {"from": "pa", "to": "ky", "width": 1}, {"from": "pa", "to": "fl", "width": 1}, {"from": "pa", "to": "wi", "width": 1}, {"from": "pa", "to": "nh", "width": 1}, {"from": "pa", "to": "mn", "width": 1}, {"from": "pa", "to": "america", "width": 1}, {"from": "pa", "to": "counties", "width": 1}, {"from": "pa", "to": "tightens", "width": 1}, {"from": "pa", "to": "newton", "width": 1}, {"from": "holland mi", "to": "wi", "width": 1}, {"from": "hamtramck", "to": "wascatholic", "width": 1}, {"from": "penn", "to": "new york", "width": 1}, {"from": "tx", "to": "nm", "width": 1}, {"from": "tx", "to": "la", "width": 1}, {"from": "tx", "to": "tn", "width": 1}, {"from": "tx", "to": "ky", "width": 1}, {"from": "tx", "to": "mckinney", "width": 1}, {"from": "orlando", "to": "stony brook", "width": 1}, {"from": "orlando", "to": "hershey pa", "width": 1}, {"from": "orlando", "to": "fl", "width": 1}, {"from": "orlando", "to": "mobile", "width": 1}, {"from": "orlando", "to": "jax", "width": 1}, {"from": "hollywood", "to": "america", "width": 1}, {"from": "new mexico", "to": "america", "width": 1}, {"from": "detroit", "to": "hayward", "width": 1}, {"from": "detroit", "to": "la", "width": 1}, {"from": "detroit", "to": "america", "width": 1}, {"from": "detroit", "to": "detroit", "width": 1}, {"from": "detroit", "to": "pme", "width": 1}, {"from": "detroit", "to": "york city", "width": 1}, {"from": "detroit", "to": "boston", "width": 1}, {"from": "detroit", "to": "flint la", "width": 1}, {"from": "detroit", "to": "baltimore", "width": 1}, {"from": "detroit", "to": "camden", "width": 1}, {"from": "sandown", "to": "nh", "width": 1}, {"from": "camden", "to": "baltimore", "width": 1}, {"from": "tn", "to": "nm", "width": 1}, {"from": "tn", "to": "la", "width": 1}, {"from": "tn", "to": "ky", "width": 1}, {"from": "tn", "to": "il", "width": 1}, {"from": "new london", "to": "nh", "width": 1}, {"from": "free palestine", "to": "islamic iran", "width": 1}, {"from": "free palestine", "to": "america", "width": 1}, {"from": "conway", "to": "ny", "width": 1}, {"from": "mecca", "to": "america", "width": 1}, {"from": "hershey pa", "to": "fl", "width": 1}, {"from": "hershey pa", "to": "mobile", "width": 1}, {"from": "newwark", "to": "new jersey", "width": 1}, {"from": "red", "to": "saigon", "width": 1}, {"from": "red", "to": "america", "width": 1}, {"from": "hudson", "to": "nyc", "width": 1}, {"from": "hudson", "to": "washington county", "width": 1}, {"from": "excl", "to": "america", "width": 1}, {"from": "long", "to": "lakeview", "width": 1}, {"from": "laconia", "to": "america", "width": 1}, {"from": "baltimore", "to": "disinvested", "width": 1}, {"from": "baltimore", "to": "annapolis", "width": 1}, {"from": "baltimore", "to": "baltimore", "width": 1}, {"from": "baltimore", "to": "boston", "width": 1}, {"from": "the united states", "to": "america", "width": 1}, {"from": "selma", "to": "montgomery", "width": 1}, {"from": "trump states", "to": "america", "width": 1}, {"from": "hayward", "to": "la", "width": 1}, {"from": "new york", "to": "new jersey", "width": 1}, {"from": "new york", "to": "new york", "width": 1}, {"from": "new york", "to": "laguardia", "width": 1}, {"from": "new york", "to": "ulster county", "width": 1}, {"from": "new york", "to": "west coast", "width": 1}, {"from": "new york", "to": "ny", "width": 1}, {"from": "new york", "to": "mn", "width": 1}, {"from": "new york", "to": "la", "width": 1}, {"from": "austin tx", "to": "america", "width": 1}, {"from": "saigon", "to": "america", "width": 1}, {"from": "arkansas", "to": "hot springs", "width": 1}, {"from": "arkansas", "to": "ny", "width": 1}, {"from": "sad", "to": "america", "width": 1}, {"from": "fort myers", "to": "fl", "width": 1}, {"from": "mississippi", "to": "hattiesburg", "width": 1}, {"from": "mississippi", "to": "mississippi", "width": 1}, {"from": "ny", "to": "alleghney county", "width": 1}, {"from": "ny", "to": "mn", "width": 1}, {"from": "ny", "to": "america", "width": 1}, {"from": "ny", "to": "new jersey", "width": 1}, {"from": "boston", "to": "new england", "width": 1}, {"from": "boston", "to": "york city", "width": 1}, {"from": "america", "to": "america", "width": 1}, {"from": "america", "to": "hope", "width": 1}, {"from": "america", "to": "wi", "width": 1}, {"from": "america", "to": "mn", "width": 1}, {"from": "america", "to": "holland", "width": 1}, {"from": "america", "to": "nyc", "width": 1}, {"from": "america", "to": "islamic iran", "width": 1}, {"from": "america", "to": "presidents", "width": 1}, {"from": "america", "to": "chris kyles iraqi", "width": 1}, {"from": "america", "to": "wake", "width": 1}, {"from": "wi", "to": "fl", "width": 1}, {"from": "wi", "to": "mn", "width": 1}, {"from": "wi", "to": "nh", "width": 1}, {"from": "wi", "to": "ryans", "width": 1}, {"from": "kluudkimvn greeley", "to": "vegas", "width": 1}, {"from": "kluudkimvn greeley", "to": "jyimiibqkb albuquerque", "width": 1}, {"from": "kluudkimvn greeley", "to": "nm", "width": 1}, {"from": "nm", "to": "la", "width": 1}, {"from": "nm", "to": "ky", "width": 1}, {"from": "nm", "to": "vegas", "width": 1}, {"from": "nm", "to": "jyimiibqkb albuquerque", "width": 1}, {"from": "tallahassee", "to": "fl", "width": 1}, {"from": "tallahassee", "to": "fla", "width": 1}, {"from": "la", "to": "ky", "width": 1}, {"from": "la", "to": "new orleans", "width": 1}, {"from": "la", "to": "stan kroenke bashes st", "width": 1}, {"from": "fl", "to": "ft myers", "width": 1}, {"from": "fl", "to": "nh", "width": 1}, {"from": "fl", "to": "west palm beach", "width": 1}, {"from": "fl", "to": "cape canaveral", "width": 1}, {"from": "fl", "to": "mobile", "width": 1}, {"from": "fl", "to": "mn", "width": 1}, {"from": "fl", "to": "coral gables", "width": 1}, {"from": "ky", "to": "pikeville", "width": 1}, {"from": "nh", "to": "mn", "width": 1}, {"from": "nh", "to": "portsmouth", "width": 1}, {"from": "laguardia", "to": "jfk", "width": 1}, {"from": "new orleans", "to": "jfk", "width": 1}, {"from": "new jersey", "to": "nyc", "width": 1}, {"from": "vegas", "to": "vegas", "width": 1}, {"from": "vegas", "to": "jyimiibqkb albuquerque", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
